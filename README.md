@@ -123,8 +123,11 @@ npm install
 4. Create .env file
 
 PORT=5000
+
 SUPABASE_URL=https://fzokthuimsmvqjchhxaa.supabase.co
+
 SUPABASE_KEY=sb_publishable_DYhtB9ADsitXPUltbIoNYg_XibW_5bO
+
 JWT_SECRET=habit-tracker-jwtsecretkey-secret123
 
 5. Run Server
