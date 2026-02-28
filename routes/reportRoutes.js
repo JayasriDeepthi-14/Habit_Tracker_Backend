@@ -1,12 +1,11 @@
 import express from "express";
 import { protect } from "../middleware/auth.js";
-import { getUserStreak, getLeaderboard } from "../controllers/streakController.js";
+import { getReports } from "../controllers/reportController.js";
 
 const router = express.Router();
 
 router.use(protect);
 
-router.get("/", getUserStreak);
-router.get("/leaderboard", getLeaderboard);
+router.get("/", getReports);
 
 export default router;

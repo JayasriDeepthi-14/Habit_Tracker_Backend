@@ -7,7 +7,8 @@ dotenv.config();
 import authRoutes from "./routes/authRoutes.js";
 import habitRoutes from "./routes/habitRoutes.js";
 import streakRoutes from "./routes/streakRoutes.js";
-import habitLogRoutes from "./routes/habitLogRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
 
 const app = express();
 
@@ -17,7 +18,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/habits", habitRoutes);
 app.use("/api/streak", streakRoutes);
-app.use("/api/habits", habitLogRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/reports", reportRoutes);
 
 const PORT = process.env.PORT || 5000;
 

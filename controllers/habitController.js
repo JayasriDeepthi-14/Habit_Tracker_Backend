@@ -1,7 +1,6 @@
 import supabase from "../config/db.js";
 import dayjs from "dayjs";
 
-// add
 export const addHabit = async (req, res) => {
   const { title, category, priority } = req.body;
 
@@ -12,14 +11,15 @@ export const addHabit = async (req, res) => {
       title,
       category,
       priority,
-    }]);
+      type: "custom"
+    }])
+    .select();
 
   if (error) return res.status(400).json(error);
 
   res.json(data);
 };
 
-// get
 export const getHabits = async (req, res) => {
   const { data, error } = await supabase
     .from("habits")
@@ -31,22 +31,17 @@ export const getHabits = async (req, res) => {
   res.json(data);
 };
 
-// track
 export const trackHabit = async (req, res) => {
   const { habit_id, status } = req.body;
-
   const today = dayjs().format("YYYY-MM-DD");
 
-  // Check if already tracked today
-  const { data: existing, error: checkError } = await supabase
+  const { data: existing } = await supabase
     .from("habit_logs")
     .select("*")
     .eq("habit_id", habit_id)
     .eq("date", today);
 
-  if (checkError) return res.status(400).json(checkError);
-
-  if (existing.length > 0) {
+  if (existing && existing.length > 0) {
     return res.status(400).json({ msg: "Already tracked today" });
   }
 
@@ -55,22 +50,33 @@ export const trackHabit = async (req, res) => {
     .insert([{
       habit_id,
       status,
-      date: today
+      date: today,
+      user_id: req.user
     }]);
 
   if (error) return res.status(400).json(error);
 
-  res.json({ msg: "Tracked Successfully" });
+  res.json({ msg: "Tracked" });
 };
 
-// delete
 export const deleteHabit = async (req, res) => {
-  const { error } = await supabase
+  await supabase
     .from("habits")
     .delete()
-    .eq("id", req.params.id);
-
-  if (error) return res.status(400).json(error);
+    .eq("id", req.params.id)
+    .eq("user_id", req.user);
 
   res.json({ msg: "Deleted" });
+};
+
+export const updateHabit = async (req, res) => {
+  const { title, category, priority } = req.body;
+
+  await supabase
+    .from("habits")
+    .update({ title, category, priority })
+    .eq("id", req.params.id)
+    .eq("user_id", req.user);
+
+  res.json({ msg: "Updated" });
 };
